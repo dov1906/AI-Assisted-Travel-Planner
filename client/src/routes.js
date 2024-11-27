@@ -6,9 +6,9 @@ import TripList from "./components/TripList";
 import TripDetails from "./components/TripDetails";
 import ActivityPlanner from "./components/ActivityPlanner";
 import AddActivityForm from "./components/AddActivityForm";
-import ExpenseList from "./components/ExpenseList";
 import Profile from "./components/Profile";
 import BrowsePrice from './components/BrowsePrice';
+import ExpensePage from "./components/ExpensePage";
 
 const routes = [
     {
@@ -21,7 +21,7 @@ const routes = [
             { path: "/trip/:id", element: <TripDetails /> }, // Trip details
             { path: "/trip/:id/activities", element: <ActivityPlanner /> }, // Activities
             { path: "/trip/:id/add-activity", element: <AddActivityForm /> }, // Add activity
-            { path: "/trip/:id/expenses", element: <ExpenseList /> }, // Expenses
+            { path: "/trip/:id/expenses", element: <ExpensePage /> },
             { path: "/profile", element: <Profile /> }, // Profile
             { path: "/browse-prices", element: <BrowsePrice /> },
         ],

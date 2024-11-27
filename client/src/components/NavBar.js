@@ -16,9 +16,7 @@ function NavBar() {
 
     const handleTripSelection = (id) => {
         setCurrentTripId(id);
-        if (id) {
-            navigate(`/trip/${id}`); // Automatically navigate to the selected trip details
-        }
+        navigate(`/trip/${id}/expenses`);
     };
 
     return (

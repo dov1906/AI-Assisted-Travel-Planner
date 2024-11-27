@@ -5,7 +5,6 @@ function TripList() {
     const [trips, setTrips] = useState([]);
 
     useEffect(() => {
-        // Fetch all trips from the backend
         fetch("http://127.0.0.1:5555/trips")
             .then((response) => response.json())
             .then((data) => setTrips(data))
@@ -44,7 +43,7 @@ function TripList() {
                             <strong>Dates:</strong> {trip.start_date} - {trip.end_date}
                         </p>
                         <p style={{ margin: "5px 0", color: "#666" }}>
-                            <strong>Total Price:</strong> ${trip.total_price || "N/A"}
+                            <strong>Total Expense:</strong> ${trip.total_expense || "N/A"}
                         </p>
                         <NavLink
                             to={`/trip/${trip.id}`}

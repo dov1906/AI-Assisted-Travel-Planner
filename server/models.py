@@ -20,6 +20,10 @@ class Trip(db.Model, SerializerMixin):
     activities = db.relationship('Activity', back_populates='trip', cascade="all, delete-orphan")
     expenses = db.relationship('Expense', back_populates='trip', cascade="all, delete-orphan")
 
+    # Calculate total expense dynamically
+    @property
+    def total_expense(self):
+        return sum(expense.amount for expense in self.expenses)
 
 class Activity(db.Model, SerializerMixin):
     __tablename__ = "activities"

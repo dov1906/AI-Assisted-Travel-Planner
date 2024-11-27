@@ -62,9 +62,15 @@ api.add_resource(Login, '/login')
 
 # Trip Routes
 class AllTrips(Resource):
+
+
     def get(self):
         trips = Trip.query.all()
-        response_body = [trip.to_dict(only=('id', 'name', 'destination', 'start_date', 'end_date')) for trip in trips]
+        response_body = [
+            {**trip.to_dict(only=('id', 'name', 'destination', 'start_date', 'end_date')), 
+             "total_expense": trip.total_expense}  # Include total_expense
+            for trip in trips
+        ]
         return make_response(response_body, 200)
 
     def post(self):
@@ -94,6 +100,7 @@ class TripByID(Resource):
                 'activities.id', 'activities.name', 'activities.description',
                 'expenses.id', 'expenses.amount', 'expenses.description',
             ))
+            response_body["total_expense"] = trip.total_expense  # Add total_expense
             return make_response(jsonify(response_body), 200)
         else:
             return make_response({"error": "Trip not found!"}, 404)
@@ -200,9 +207,11 @@ class TripExpenses(Resource):
             db.session.commit()
             response_body = new_expense.to_dict(only=('id', 'amount', 'description'))
             return make_response(response_body, 201)
-        except:
-            response_body = {"error": "Invalid expense data provided!"}
+        except Exception as e:
+            print(f"Error adding expense for trip {trip_id}: {e}")
+            response_body = {"error": str(e)}
             return make_response(response_body, 422)
+
 
 api.add_resource(TripExpenses, '/trips/<int:trip_id>/expenses')
 
