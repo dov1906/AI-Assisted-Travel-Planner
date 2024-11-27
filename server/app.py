@@ -215,6 +215,41 @@ class TripExpenses(Resource):
 
 api.add_resource(TripExpenses, '/trips/<int:trip_id>/expenses')
 
+
+# User Profile Routes
+class UserProfile(Resource):
+    def get(self):
+        # Replace this with the actual user fetching logic
+        # Assuming the user is authenticated and their ID is available (e.g., session or token-based authentication)
+        user_id = 1  # Example user ID
+        user = User.query.get(user_id)
+        if user:
+            response_body = user.to_dict(only=('id', 'name', 'email'))
+            return make_response(response_body, 200)
+        else:
+            return make_response({"error": "User not found"}, 404)
+
+    def put(self):
+        user_id = 1  # Example user ID
+        user = User.query.get(user_id)
+        if user:
+            try:
+                user.name = request.json.get('name', user.name)
+                user.email = request.json.get('email', user.email)
+                password = request.json.get('password', None)
+                if password:
+                    user.password = password  # Make sure to hash the password before storing it
+                db.session.commit()
+                response_body = user.to_dict(only=('id', 'name', 'email'))
+                return make_response(response_body, 200)
+            except Exception as e:
+                return make_response({"error": "Failed to update user profile"}, 400)
+        else:
+            return make_response({"error": "User not found"}, 404)
+
+api.add_resource(UserProfile, '/user')
+
+
 class ExpenseByID(Resource):
     def put(self, id):
         expense = Expense.query.get(id)
