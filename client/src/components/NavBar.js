@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 function NavBar() {
     const [currentTripId, setCurrentTripId] = useState(null);
     const [trips, setTrips] = useState([]);
-    const navigate = useNavigate(); // For programmatic navigation
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Fetch all trips from the backend
@@ -24,15 +24,12 @@ function NavBar() {
     return (
         <nav>
             <NavLink to="/">Home</NavLink>
-            {currentTripId && (
-                <>
-                    <NavLink to={`/trip/${currentTripId}`}>Trip Details</NavLink>
-                    <NavLink to={`/trip/${currentTripId}/activities`}>Activity Planner</NavLink>
-                    <NavLink to={`/trip/${currentTripId}/add-activity`}>Add Activity</NavLink>
-                    <NavLink to={`/trip/${currentTripId}/expenses`}>Expenses</NavLink>
-                    <NavLink to="/browse-prices">Browse Prices</NavLink>
-                </>
-            )}
+            <NavLink to="/trips">My Trips</NavLink>
+            <NavLink to={`/trip/${currentTripId || "default"}`}>Trip Details</NavLink>
+            <NavLink to={`/trip/${currentTripId || "default"}/activities`}>Activity Planner</NavLink>
+            <NavLink to={`/trip/${currentTripId || "default"}/add-activity`}>Add Activity</NavLink>
+            <NavLink to={`/trip/${currentTripId || "default"}/expenses`}>Expenses</NavLink>
+            <NavLink to="/browse-prices">Browse Prices</NavLink>
             <NavLink to="/profile">Profile</NavLink>
 
             {/* Dropdown to select a trip */}

@@ -1,74 +1,84 @@
-import React, { useState} from "react";
+import React, { useState, useEffect } from "react";
 
-function AddActivityForm({ currentTripId }) {
-    const [formData, setFormData] = useState({
-        activityName: "",
-        description: "",
-        location: "",
-        time: "",
-    });
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
+function AddActivityForm() {
+    const [trips, setTrips] = useState([]);
+    const [selectedTripId, setSelectedTripId] = useState("");
+    const [activityName, setActivityName] = useState("");
+    const [description, setDescription] = useState("");
+    const [location, setLocation] = useState("");
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
-    };
+    // Fetch trips for the dropdown
+    useEffect(() => {
+        fetch("http://127.0.0.1:5555/trips")
+            .then((response) => response.json())
+            .then((data) => setTrips(data))
+            .catch((error) => console.error("Error fetching trips:", error));
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setError("");
-        setSuccess("");
 
-        if (!currentTripId) {
-            setError("No trip selected. Please select a trip first.");
+        if (!selectedTripId) {
+            alert("Please select a trip to add the activity to.");
             return;
         }
 
-        fetch(`http://127.0.0.1:5555/trips/${currentTripId}/activities`, {
+        // Prepare the activity payload
+        const newActivity = {
+            name: activityName,
+            description,
+            location,
+        };
+
+        // Post the activity to the selected trip
+        fetch(`http://127.0.0.1:5555/trips/${selectedTripId}/activities`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                name: formData.activityName,
-                description: formData.description,
-                location: formData.location,
-                time: formData.time,
-            }),
+            body: JSON.stringify(newActivity),
         })
             .then((response) => {
                 if (response.ok) {
-                    return response.json();
+                    alert("Activity added successfully!");
+                    // Reset the form
+                    setActivityName("");
+                    setDescription("");
+                    setLocation("");
+                    setSelectedTripId("");
                 } else {
-                    throw new Error("Failed to add activity");
+                    alert("Failed to add activity. Please try again.");
                 }
             })
-            .then(() => {
-                setSuccess("Activity added successfully!");
-                setFormData({
-                    activityName: "",
-                    description: "",
-                    location: "",
-                    time: "",
-                });
-            })
-            .catch(() => setError("An error occurred while adding the activity."));
+            .catch((error) => console.error("Error adding activity:", error));
     };
 
     return (
         <div>
             <h1>Add New Activity</h1>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            {success && <p style={{ color: "green" }}>{success}</p>}
             <form onSubmit={handleSubmit}>
+                <label>
+                    Select Trip:
+                    <select
+                        value={selectedTripId}
+                        onChange={(e) => setSelectedTripId(e.target.value)}
+                        required
+                    >
+                        <option value="">--Select a Trip--</option>
+                        {trips.map((trip) => (
+                            <option key={trip.id} value={trip.id}>
+                                {trip.name}
+                            </option>
+                        ))}
+                    </select>
+                </label>
+                <br />
                 <label>
                     Activity Name:
                     <input
                         type="text"
-                        name="activityName"
-                        value={formData.activityName}
-                        onChange={handleInputChange}
+                        value={activityName}
+                        onChange={(e) => setActivityName(e.target.value)}
                         required
                     />
                 </label>
@@ -76,31 +86,18 @@ function AddActivityForm({ currentTripId }) {
                 <label>
                     Description:
                     <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleInputChange}
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
                         required
-                    ></textarea>
+                    />
                 </label>
                 <br />
                 <label>
                     Location:
                     <input
                         type="text"
-                        name="location"
-                        value={formData.location}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <br />
-                <label>
-                    Time:
-                    <input
-                        type="datetime-local"
-                        name="time"
-                        value={formData.time}
-                        onChange={handleInputChange}
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
                         required
                     />
                 </label>

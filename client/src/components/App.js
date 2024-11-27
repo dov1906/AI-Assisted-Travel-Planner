@@ -3,10 +3,12 @@ import { Outlet } from "react-router-dom";
 import NavBar from "./NavBar";
 
 function App() {
+
     return (
         <div>
             <NavBar />
-            <Outlet /> 
+            <Outlet/> 
+            {/* useOutletCOntext */}
         </div>
     );
 }

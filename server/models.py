@@ -29,10 +29,11 @@ class Activity(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String)
     location = db.Column(db.String, nullable=True)
-    time = db.Column(db.DateTime, nullable=False)
+    time = db.Column(db.DateTime, nullable=True)  # Allow null values
 
     trip_id = db.Column(db.Integer, db.ForeignKey('trips.id'), nullable=False)
     trip = db.relationship('Trip', back_populates='activities')
+
 
 class Expense(db.Model, SerializerMixin):
     __tablename__ = "expenses"

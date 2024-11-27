@@ -137,15 +137,20 @@ class TripActivities(Resource):
         name = request.json.get('name')
         description = request.json.get('description')
         location = request.json.get('location')
-        time = request.json.get('time')
         try:
-            new_activity = Activity(name=name, description=description, location=location, time=time, trip_id=trip_id)
+            new_activity = Activity(
+                name=name,
+                description=description,
+                location=location,
+                trip_id=trip_id
+            )
             db.session.add(new_activity)
             db.session.commit()
-            response_body = new_activity.to_dict(only=('id', 'name', 'description', 'location', 'time'))
+            response_body = new_activity.to_dict(only=('id', 'name', 'description', 'location'))
             return make_response(response_body, 201)
-        except:
-            response_body = {"error": "Invalid activity data provided!"}
+        except Exception as e:
+            print(f"Error adding activity: {e}")
+            response_body = {"error": str(e)}
             return make_response(response_body, 422)
 
 api.add_resource(TripActivities, '/trips/<int:trip_id>/activities')
