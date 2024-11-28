@@ -12,7 +12,7 @@ from config import app, db, api, FLIGHT_API_KEY
 # Add your model imports
 from models import User, Trip, Activity, Expense, ExpenseUser
 from services.flight_api import get_flight_prices
-
+from datetime import datetime
 # Views go here!
 
 from dotenv import load_dotenv
@@ -93,7 +93,7 @@ api.add_resource(AllTrips, '/trips')
 
 class TripByID(Resource):
     def get(self, id):
-        trip = Trip.query.get(id)
+        trip = db.session.get(Trip, id)
         if trip:
             response_body = trip.to_dict(only=(
                 'id', 'name', 'destination', 'start_date', 'end_date',
@@ -104,25 +104,52 @@ class TripByID(Resource):
             return make_response(jsonify(response_body), 200)
         else:
             return make_response({"error": "Trip not found!"}, 404)
-        
     def put(self, id):
-        trip = Trip.query.get(id)
+        trip = db.session.get(Trip, id)
         if trip:
             try:
-                for attr in request.json:
-                    setattr(trip, attr, request.json.get(attr))
+                allowed_fields = ['name', 'destination', 'start_date', 'end_date']
+                for attr, value in request.json.items():
+                    if attr in allowed_fields:
+                        # Convert date strings to date objects
+                        if attr in ['start_date', 'end_date'] and isinstance(value, str):
+                            value = datetime.strptime(value, "%Y-%m-%d").date()
+                        setattr(trip, attr, value)
+
                 db.session.commit()
-                response_body = trip.to_dict(only=('id', 'name', 'destination', 'start_date', 'end_date'))
+                response_body = trip.to_dict(only=('id', 'name', 'destination', 'start_date', 'end_date', 'total_expense'))
                 return make_response(response_body, 200)
-            except:
+            except Exception as e:
+                print(f"Error processing PATCH request: {e}")
                 response_body = {"error": "Invalid trip data provided!"}
                 return make_response(response_body, 422)
         else:
             response_body = {"error": "Trip not found!"}
             return make_response(response_body, 404)
 
+    def patch(self, id):
+        trip = db.session.get(Trip, id)
+        if trip:
+            try:
+                allowed_fields = ['name', 'destination', 'start_date', 'end_date']
+                for attr, value in request.json.items():
+                    if attr in allowed_fields:
+                        # Convert date strings to Python date objects
+                        if attr in ['start_date', 'end_date'] and isinstance(value, str):
+                            value = datetime.strptime(value, "%Y-%m-%d").date()
+                        setattr(trip, attr, value)
+                db.session.commit()
+                response_body = trip.to_dict(only=('id', 'name', 'destination', 'start_date', 'end_date'))
+                return make_response(response_body, 200)
+            except Exception as e:
+                response_body = {"error": f"Invalid trip data provided: {e}"}
+                return make_response(response_body, 422)
+        else:
+            response_body = {"error": "Trip not found!"}
+            return make_response(response_body, 404)
+
     def delete(self, id):
-        trip = Trip.query.get(id)
+        trip = db.session.get(Trip, id)
         if trip:
             db.session.delete(trip)
             db.session.commit()
@@ -132,6 +159,7 @@ class TripByID(Resource):
             return make_response(response_body, 404)
 
 api.add_resource(TripByID, '/trips/<int:id>')
+
 
 # Activity Routes
 class TripActivities(Resource):

@@ -7,8 +7,10 @@ import TripDetails from "./components/TripDetails";
 import ActivityPlanner from "./components/ActivityPlanner";
 import AddActivityForm from "./components/AddActivityForm";
 import Profile from "./components/Profile";
-import BrowsePrice from './components/BrowsePrice';
+import BrowsePrice from "./components/BrowsePrice";
 import ExpensePage from "./components/ExpensePage";
+import AddTrip from "./components/AddTrip"; // Import AddTrip
+import EditTrip from "./components/EditTrip"; // Import EditTrip
 
 const routes = [
     {
@@ -21,9 +23,11 @@ const routes = [
             { path: "/trip/:id", element: <TripDetails /> }, // Trip details
             { path: "/trip/:id/activities", element: <ActivityPlanner /> }, // Activities
             { path: "/trip/:id/add-activity", element: <AddActivityForm /> }, // Add activity
-            { path: "/trip/:id/expenses", element: <ExpensePage /> },
+            { path: "/trip/:id/expenses", element: <ExpensePage /> }, // Expenses
             { path: "/profile", element: <Profile /> }, // Profile
-            { path: "/browse-prices", element: <BrowsePrice /> },
+            { path: "/browse-prices", element: <BrowsePrice /> }, // Browse prices
+            { path: "/add-trip", element: <AddTrip /> }, // Add trip
+            { path: "/edit-trip/:id", element: <EditTrip /> }, // Edit trip
         ],
     },
 ];
