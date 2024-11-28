@@ -35,18 +35,29 @@ function BrowsePrice() {
         setResults(null);
 
         if (option === "hotel") {
+            const cityID = formData.cityName.toLowerCase() === "new york" ? "60763" : null;
+
+            if (!cityID) {
+                setError("City not found. Please check the city name.");
+                return;
+            }
+
             fetch(
                 `/api/get_hotels?city_name=${formData.cityName}&checkin=${formData.checkin}&checkout=${formData.checkout}&rooms=${formData.rooms}&adults=${formData.adults}&children=${formData.children}`
             )
                 .then((response) => response.json())
                 .then((data) => {
-                    // Filter out only relevant hotel information
-                    const formattedHotels = data.map((hotel) => ({
-                        name: hotel.name,
-                        price: hotel.price1 || hotel.price2 || "Not Available",
-                        
-                    }));
-                    setResults(formattedHotels);
+                    if (data.error) {
+                        setError(data.error);
+                    } else {
+                        const formattedHotels = data.map((hotel) => ({
+                            name: hotel.name,
+                            price: hotel.price || "Not Available",
+                            rating: hotel.rating || "N/A",
+                            reviewsCount: hotel.reviews_count || 0,
+                        }));
+                        setResults(formattedHotels);
+                    }
                 })
                 .catch(() => setError("Error fetching hotel data."));
         } else if (option === "flight") {
@@ -55,15 +66,18 @@ function BrowsePrice() {
             )
                 .then((response) => response.json())
                 .then((data) => {
-                    // Filter out only relevant flight information
-                    const formattedFlights = data.map((flight) => ({
-                        departure: flight.departure,
-                        arrival: flight.arrival,
-                        price: flight.price || "Not Available",
-                        duration: `${Math.floor(flight.duration_minutes / 60)}h ${flight.duration_minutes % 60}m`,
-                        stops: flight.stops,
-                    }));
-                    setResults(formattedFlights);
+                    if (data.error) {
+                        setError(data.error);
+                    } else {
+                        const formattedFlights = data.map((flight) => ({
+                            departure: flight.departure,
+                            arrival: flight.arrival,
+                            price: flight.price || "Not Available",
+                            duration: `${Math.floor(flight.duration_minutes / 60)}h ${flight.duration_minutes % 60}m`,
+                            stops: flight.stops,
+                        }));
+                        setResults(formattedFlights);
+                    }
                 })
                 .catch(() => setError("Error fetching flight data."));
         } else {
@@ -236,7 +250,8 @@ function BrowsePrice() {
                             <li key={index}>
                                 <strong>{result.name || `Flight ${index + 1}`}</strong>
                                 <p>Price: {result.price}</p>
-                                {result.reviews && <p>Reviews: {result.reviews}</p>}
+                                {result.rating && <p>Rating: {result.rating}</p>}
+                                {result.reviewsCount && <p>Reviews: {result.reviewsCount}</p>}
                                 {result.duration && <p>Duration: {result.duration}</p>}
                                 {result.stops !== undefined && <p>Stops: {result.stops}</p>}
                             </li>

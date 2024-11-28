@@ -407,54 +407,6 @@ def generate_itinerary():
         return jsonify({"error": str(e)}), 500
     
     
-# @app.route('/api/get_city_id', methods=['GET'])
-# def api_get_city_id():
-#     """
-#     API route to fetch the city ID for a given city name.
-#     """
-#     # city_name = request.args.get("city_name")
-#     # if not city_name:
-#     #     return make_response({"error": "City name is required"}, 400)
-    
-#     city_id = get_city_id(
-#         # city_name
-#         )
-#     if city_id:
-#         return jsonify({"city_id": city_id}), 200
-#     else:
-#         return jsonify({"error": "City not found or invalid API key"}), 404
-
-
-@app.route('/api/get_hotels', methods=['GET'])
-def api_get_hotels():
-    """
-    API route to fetch hotels in a city for given check-in and check-out dates.
-    """
-    city_name = request.args.get("city_name")
-    checkin = request.args.get("checkin")
-    checkout = request.args.get("checkout")
-    rooms = request.args.get("rooms", 1, type=int)
-    adults = request.args.get("adults", 2, type=int)
-    children = request.args.get("children", 0, type=int)
-    pagination = request.args.get("pagination", 0, type=int)
-    currency = request.args.get("currency", "USD")
-    
-    # if not city_name or not checkin or not checkout:
-    #     return make_response({"error": "City name, checkin, and checkout dates are required"}, 400)
-
-    # Get the city ID
-    city_id = get_city_id(
-        city_name
-    )
-    # if not city_id:
-    #     return jsonify({"error": "City not found"}), 404
-
-    # Fetch hotels
-    hotels = fetch_hotels( city_id, checkin, checkout, pagination, currency, rooms, adults, children)
-    return jsonify(hotels), 200
-
-
-
 @app.route('/')
 def index():
     return '<h1>Travel Planner Server</h1>'
