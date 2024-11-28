@@ -72,23 +72,32 @@ class AllTrips(Resource):
             for trip in trips
         ]
         return make_response(response_body, 200)
-
     def post(self):
         name = request.json.get('name')
         destination = request.json.get('destination')
         start_date = request.json.get('start_date')
         end_date = request.json.get('end_date')
-        user_id = request.json.get('user_id')
+        user_id = request.json.get('user_id')  # Required field
+
         try:
-            new_trip = Trip(name=name, destination=destination, start_date=start_date, end_date=end_date, user_id=user_id)
+            # Convert start_date and end_date to date objects
+            start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+
+            new_trip = Trip(
+                name=name,
+                destination=destination,
+                start_date=start_date,
+                end_date=end_date,
+                user_id=user_id,  # Add user_id here
+            )
             db.session.add(new_trip)
             db.session.commit()
             response_body = new_trip.to_dict(only=('id', 'name', 'destination', 'start_date', 'end_date'))
             return make_response(response_body, 201)
-        except:
-            response_body = {"error": "Invalid trip data provided!"}
+        except Exception as e:
+            response_body = {"error": f"Invalid trip data provided: {e}"}
             return make_response(response_body, 422)
-
 api.add_resource(AllTrips, '/trips')
 
 class TripByID(Resource):

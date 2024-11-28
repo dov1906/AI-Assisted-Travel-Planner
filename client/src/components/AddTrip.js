@@ -7,7 +7,7 @@ function AddTrip() {
         destination: "",
         start_date: "",
         end_date: "",
-        total_expense: "",
+        user_id: 1, // Hardcode a user_id for testing; replace with dynamic logic as needed
     });
     const navigate = useNavigate();
 
@@ -18,22 +18,36 @@ function AddTrip() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        const formattedPayload = {
+            name: formData.name,
+            destination: formData.destination,
+            start_date: formData.start_date,
+            end_date: formData.end_date,
+            user_id: formData.user_id, // Ensure user_id is included
+        };
+
         fetch("http://127.0.0.1:5555/trips", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(formattedPayload),
         })
             .then((response) => {
                 if (response.ok) {
                     alert("Trip added successfully!");
                     navigate("/trips"); // Redirect back to the trip list
                 } else {
-                    alert("Failed to add trip. Please try again.");
+                    return response.json().then((err) => {
+                        throw new Error(err.error || "Failed to add trip.");
+                    });
                 }
             })
-            .catch((error) => console.error("Error adding trip:", error));
+            .catch((error) => {
+                console.error("Error adding trip:", error);
+                alert(error.message || "Failed to add trip. Please try again.");
+            });
     };
 
     return (
@@ -81,16 +95,6 @@ function AddTrip() {
                         value={formData.end_date}
                         onChange={handleInputChange}
                         required
-                    />
-                </label>
-                <br />
-                <label>
-                    Total Expense:
-                    <input
-                        type="number"
-                        name="total_expense"
-                        value={formData.total_expense}
-                        onChange={handleInputChange}
                     />
                 </label>
                 <br />
