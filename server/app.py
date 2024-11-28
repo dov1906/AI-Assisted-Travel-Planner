@@ -12,7 +12,7 @@ from config import app, db, api, FLIGHT_API_KEY
 # Add your model imports
 from models import User, Trip, Activity, Expense, ExpenseUser
 from services.flight_api import get_flight_prices
-from services.hotel_api import get_city_id, fetch_hotels
+
 # Views go here!
 
 from dotenv import load_dotenv
