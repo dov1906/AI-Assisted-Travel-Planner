@@ -106,10 +106,10 @@ class TripByID(Resource):
         if trip:
             response_body = trip.to_dict(only=(
                 'id', 'name', 'destination', 'start_date', 'end_date',
-                'activities.id', 'activities.name', 'activities.description',
+                'activities.id', 'activities.name', 'activities.description', 'activities.location',
                 'expenses.id', 'expenses.amount', 'expenses.description',
             ))
-            response_body["total_expense"] = trip.total_expense  # Add total_expense
+            response_body["total_expense"] = trip.total_expense
             return make_response(jsonify(response_body), 200)
         else:
             return make_response({"error": "Trip not found!"}, 404)
@@ -174,7 +174,7 @@ api.add_resource(TripByID, '/trips/<int:id>')
 class TripActivities(Resource):
     def get(self, trip_id):
         activities = Activity.query.filter_by(trip_id=trip_id).all()
-        response_body = [activity.to_dict(only=('id', 'name', 'description', 'location', 'time')) for activity in activities]
+        response_body = [activity.to_dict(only=('id', 'name', 'description', 'location')) for activity in activities]
         return make_response(response_body, 200)
 
     def post(self, trip_id):
@@ -207,7 +207,7 @@ class ActivityByID(Resource):
                 for attr in request.json:
                     setattr(activity, attr, request.json.get(attr))
                 db.session.commit()
-                response_body = activity.to_dict(only=('id', 'name', 'description', 'location', 'time'))
+                response_body = activity.to_dict(only=('id', 'name', 'description', 'location'))
                 return make_response(response_body, 200)
             except:
                 response_body = {"error": "Invalid activity data provided!"}
@@ -215,7 +215,7 @@ class ActivityByID(Resource):
         else:
             response_body = {"error": "Activity not found!"}
             return make_response(response_body, 404)
-
+        
     def delete(self, id):
         activity = Activity.query.get(id)
         if activity:
