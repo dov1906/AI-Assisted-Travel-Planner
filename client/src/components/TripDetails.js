@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import TripSubNav from "./TripSubNav"; // Import the sub-navigation
 
 function TripDetail() {
     const { id } = useParams(); // Get the trip ID from the URL
@@ -25,49 +26,135 @@ function TripDetail() {
     }, [id]);
 
     if (loading) {
-        return <p>Loading trip details...</p>;
+        return (
+            <div style={{ textAlign: "center", marginTop: "50px" }}>
+                <p>Loading trip details...</p>
+            </div>
+        );
     }
 
     if (!trip) {
-        return <p>Trip not found!</p>;
+        return (
+            <div style={{ textAlign: "center", marginTop: "50px" }}>
+                <p>Trip not found!</p>
+            </div>
+        );
     }
 
     return (
-        <div>
-            <h1>{trip.name}</h1>
-            <p>Destination: {trip.destination}</p>
-            <p>Start Date: {trip.start_date}</p>
-            <p>End Date: {trip.end_date}</p>
+        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+            {/* Sub-navigation for the trip */}
+            <TripSubNav tripId={id} />
 
-            <h2>Activities</h2>
-            {activities.length > 0 ? (
-                <ul>
-                    {activities.map((activity) => (
-                        <li key={activity.id}>
-                            <strong>{activity.name}</strong>
-                            <p>{activity.description}</p>
-                            <p>Location: {activity.location}</p>
-                            <p>Time: {new Date(activity.time).toLocaleString()}</p>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No activities added yet.</p>
-            )}
+            <div style={{ maxWidth: "800px", margin: "20px auto", textAlign: "center" }}>
+                <h1 style={{ marginBottom: "10px", fontSize: "28px", color: "#333" }}>
+                    {trip.name}
+                </h1>
+                <p style={{ fontSize: "18px", color: "#555" }}>
+                    <strong>Destination:</strong> {trip.destination}
+                </p>
+                <p style={{ fontSize: "18px", color: "#555" }}>
+                    <strong>Start Date:</strong> {trip.start_date}
+                </p>
+                <p style={{ fontSize: "18px", color: "#555" }}>
+                    <strong>End Date:</strong> {trip.end_date}
+                </p>
+            </div>
 
-            <h2>Expenses</h2>
-            {expenses.length > 0 ? (
-                <ul>
-                    {expenses.map((expense) => (
-                        <li key={expense.id}>
-                            <strong>{expense.description || "No Description"}</strong>
-                            <p>Amount: ${expense.amount.toFixed(2)}</p>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No expenses recorded yet.</p>
-            )}
+            <div style={{ margin: "30px auto", maxWidth: "1200px" }}>
+                {/* Activities Section */}
+                <div>
+                    <h2 style={{ fontSize: "24px", color: "#007BFF" }}>Activities</h2>
+                    {activities.length > 0 ? (
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                                gap: "20px",
+                                marginTop: "20px",
+                            }}
+                        >
+                            {activities.map((activity) => (
+                                <div
+                                    key={activity.id}
+                                    style={{
+                                        border: "1px solid #ddd",
+                                        borderRadius: "10px",
+                                        padding: "15px",
+                                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                                        backgroundColor: "#fff",
+                                    }}
+                                >
+                                    <h3
+                                        style={{
+                                            fontSize: "20px",
+                                            marginBottom: "10px",
+                                            color: "#333",
+                                        }}
+                                    >
+                                        {activity.name}
+                                    </h3>
+                                    <p style={{ fontSize: "16px", color: "#555" }}>
+                                        {activity.description}
+                                    </p>
+                                    {activity.location && (
+                                        <p style={{ fontSize: "16px", color: "#555" }}>
+                                            <strong>Location:</strong> {activity.location}
+                                        </p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p style={{ fontSize: "16px", color: "#555" }}>No activities added yet.</p>
+                    )}
+                </div>
+
+                {/* Expenses Section */}
+                <div style={{ marginTop: "40px" }}>
+                    <h2 style={{ fontSize: "24px", color: "#007BFF" }}>Expenses</h2>
+                    {expenses.length > 0 ? (
+                        <div
+                            style={{
+                                display: "grid",
+                                gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+                                gap: "20px",
+                                marginTop: "20px",
+                            }}
+                        >
+                            {expenses.map((expense) => (
+                                <div
+                                    key={expense.id}
+                                    style={{
+                                        border: "1px solid #ddd",
+                                        borderRadius: "10px",
+                                        padding: "15px",
+                                        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                                        backgroundColor: "#fff",
+                                    }}
+                                >
+                                    <h3
+                                        style={{
+                                            fontSize: "20px",
+                                            marginBottom: "10px",
+                                            color: "#333",
+                                        }}
+                                    >
+                                        {expense.description || "No Description"}
+                                    </h3>
+                                    <p style={{ fontSize: "16px", color: "#555" }}>
+                                        <strong>Amount:</strong> ${expense.amount.toFixed(2)}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p style={{ fontSize: "16px", color: "#555" }}>
+                            No expenses recorded yet.
+                        </p>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }

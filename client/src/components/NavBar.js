@@ -1,50 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React from "react";
+import { NavLink } from "react-router-dom";
 
 function NavBar() {
-    const [currentTripId, setCurrentTripId] = useState(null);
-    const [trips, setTrips] = useState([]);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        // Fetch all trips from the backend
-        fetch("http://127.0.0.1:5555/trips")
-            .then((response) => response.json())
-            .then((data) => setTrips(data))
-            .catch((error) => console.error("Error fetching trips:", error));
-    }, []);
-
-    const handleTripSelection = (id) => {
-        setCurrentTripId(id);
-        navigate(`/trip/${id}/expenses`);
-    };
+    const navLinkStyle = ({ isActive }) => ({
+        textDecoration: "none",
+        color: isActive ? "#007BFF" : "#333",
+        fontWeight: isActive ? "bold" : "normal",
+    });
 
     return (
-        <nav>
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/trips">My Trips</NavLink>
-            <NavLink to={`/trip/${currentTripId || "default"}`}>Trip Details</NavLink>
-            <NavLink to={`/trip/${currentTripId || "default"}/activities`}>Activity Planner</NavLink>
-            <NavLink to={`/trip/${currentTripId || "default"}/add-activity`}>Add Activity</NavLink>
-            <NavLink to={`/trip/${currentTripId || "default"}/expenses`}>Expenses</NavLink>
-            <NavLink to="/browse-prices">Browse Prices</NavLink>
-            <NavLink to="/profile">Profile</NavLink>
-
-            {/* Dropdown to select a trip */}
-            <div>
-                <label htmlFor="trip-select">Select Trip:</label>
-                <select
-                    id="trip-select"
-                    value={currentTripId || ""}
-                    onChange={(e) => handleTripSelection(e.target.value)}
-                >
-                    <option value="">--Select a Trip--</option>
-                    {trips.map((trip) => (
-                        <option key={trip.id} value={trip.id}>
-                            {trip.name}
-                        </option>
-                    ))}
-                </select>
+        <nav
+            style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "10px 20px",
+                backgroundColor: "#f8f9fa",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+            }}
+        >
+            <div style={{ display: "flex", gap: "15px" }}>
+                <NavLink to="/" style={navLinkStyle}>
+                    Home
+                </NavLink>
+                <NavLink to="/trips" style={navLinkStyle}>
+                    My Trips
+                </NavLink>
+                <NavLink to="/new-trip/add" style={navLinkStyle}>
+                    New Trip
+                </NavLink>
+                <NavLink to="/profile" style={navLinkStyle}>
+                    Profile
+                </NavLink>
             </div>
         </nav>
     );

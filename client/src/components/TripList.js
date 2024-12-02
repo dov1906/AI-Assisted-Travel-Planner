@@ -38,7 +38,7 @@ function TripList() {
             <h1>My Trips</h1>
             <p>Explore all your trips and view their details.</p>
             <button
-                onClick={() => navigate("/add-trip")}
+                onClick={() => navigate("/new-trip/add")}
                 style={{
                     padding: "10px 20px",
                     marginBottom: "20px",
