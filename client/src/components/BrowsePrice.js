@@ -116,7 +116,7 @@ function BrowsePrice() {
                 <button type="submit">Search</button>
             </form>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p>{error}</p>}
 
             {results && (
                 <div>

@@ -15,9 +15,7 @@ function ActivityPlanner() {
 
         fetch(`/generate-itinerary?destination=${destination}&duration=${duration}&interests=${interests}`)
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error("Failed to generate itinerary");
-                }
+                if (!response.ok) throw new Error("Failed to generate itinerary");
                 return response.json();
             })
             .then((data) => {
@@ -32,7 +30,7 @@ function ActivityPlanner() {
     };
 
     return (
-        <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+        <div>
             <h1>Activity Planner</h1>
             <p>Plan your activities by generating a personalized itinerary based on your preferences.</p>
 
@@ -41,15 +39,8 @@ function ActivityPlanner() {
                     e.preventDefault();
                     handleGenerateItinerary();
                 }}
-                style={{
-                    marginBottom: "20px",
-                    padding: "15px",
-                    border: "1px solid #ccc",
-                    borderRadius: "5px",
-                    backgroundColor: "#f9f9f9",
-                }}
             >
-                <div style={{ marginBottom: "10px" }}>
+                <div>
                     <label>
                         Destination:
                         <input
@@ -57,17 +48,10 @@ function ActivityPlanner() {
                             value={destination}
                             onChange={(e) => setDestination(e.target.value)}
                             placeholder="Enter destination"
-                            style={{
-                                marginLeft: "10px",
-                                padding: "5px",
-                                fontSize: "16px",
-                                width: "100%",
-                                boxSizing: "border-box",
-                            }}
                         />
                     </label>
                 </div>
-                <div style={{ marginBottom: "10px" }}>
+                <div>
                     <label>
                         Duration (days):
                         <input
@@ -76,17 +60,10 @@ function ActivityPlanner() {
                             onChange={(e) => setDuration(e.target.value)}
                             min="1"
                             max="7"
-                            style={{
-                                marginLeft: "10px",
-                                padding: "5px",
-                                fontSize: "16px",
-                                width: "100%",
-                                boxSizing: "border-box",
-                            }}
                         />
                     </label>
                 </div>
-                <div style={{ marginBottom: "10px" }}>
+                <div>
                     <label>
                         Interests:
                         <input
@@ -94,49 +71,20 @@ function ActivityPlanner() {
                             value={interests}
                             onChange={(e) => setInterests(e.target.value)}
                             placeholder="e.g., food, museums, hiking"
-                            style={{
-                                marginLeft: "10px",
-                                padding: "5px",
-                                fontSize: "16px",
-                                width: "100%",
-                                boxSizing: "border-box",
-                            }}
                         />
                     </label>
                 </div>
-                <button
-                    type="submit"
-                    style={{
-                        padding: "10px 20px",
-                        fontSize: "16px",
-                        backgroundColor: "#007BFF",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                    }}
-                    disabled={loading}
-                >
+                <button type="submit" disabled={loading}>
                     {loading ? "Generating..." : "Generate Itinerary"}
                 </button>
             </form>
 
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {error && <p>{error}</p>}
 
             {itinerary && (
-                <div
-                    style={{
-                        marginTop: "20px",
-                        padding: "15px",
-                        border: "1px solid #ccc",
-                        borderRadius: "5px",
-                        backgroundColor: "#f9f9f9",
-                    }}
-                >
+                <div>
                     <h2>Generated Itinerary</h2>
-                    <pre style={{ fontSize: "16px", whiteSpace: "pre-wrap", lineHeight: "1.5" }}>
-                        {itinerary}
-                    </pre>
+                    <pre>{itinerary}</pre>
                 </div>
             )}
         </div>

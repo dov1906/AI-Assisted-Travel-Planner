@@ -4,11 +4,11 @@ import ExpenseList from "./ExpenseList";
 import TripSubNav from "./TripSubNav";
 
 function ExpensePage() {
-    const { id: tripId } = useParams(); // Extract tripId from URL
+    const { id: tripId } = useParams();
 
     return (
         <div>
-            <TripSubNav tripId={tripId} /> {/* Include SubNav */}
+            <TripSubNav tripId={tripId} />
             <ExpenseList tripId={tripId} />
         </div>
     );
