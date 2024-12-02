@@ -18,8 +18,8 @@ def get_flight_prices(
     """Fetch flight prices from FlightAPI."""
     try:
         # Construct the API URL
-        url = f"{BASE_URL}/{FLIGHT_API_KEY}/{departure_airport_code}/{arrival_airport_code}/{departure_date}/{arrival_date}/{number_of_adults}/{number_of_childrens}/{number_of_infants}/{cabin_class}/{currency}/{region}"
-        url = "https://api.flightapi.io/roundtrip/674630b2c3046da4eda9c232/JFK/SIN/2024-12-10/2024-12-15/1/0/0/Economy/USD"
+        url = f"{BASE_URL}/{FLIGHT_API_KEY}/{departure_airport_code}/{arrival_airport_code}/{departure_date}/{arrival_date}/{number_of_adults}/{number_of_childrens}/{number_of_infants}/{cabin_class}/{currency}"
+   
         # Make the GET request
         response = requests.get(url)
         response.raise_for_status()  # Raise exception for HTTP errors

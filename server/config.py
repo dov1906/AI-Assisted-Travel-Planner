@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 
 
-FLIGHT_API_KEY = "673fc3f331eabcb49231c768"
+FLIGHT_API_KEY = "674e14854e8f61c06ba6e0c8"
 # Define metadata, instantiate db
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",

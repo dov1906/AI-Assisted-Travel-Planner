@@ -125,7 +125,7 @@ function BrowsePrice() {
                         {results.map((result, index) => (
                             <li key={index}>
                                 <strong>{result.name || `Flight ${index + 1}`}</strong>
-                                <p>Price: {result.price}</p>
+                                <p>Price: <strong>{result.price} $</strong></p>
                                 {result.duration && <p>Duration: {result.duration}</p>}
                                 {result.stops !== undefined && <p>Stops: {result.stops}</p>}
                             </li>
