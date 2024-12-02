@@ -20,9 +20,7 @@ function NavBar() {
             }}
         >
             <div style={{ display: "flex", gap: "15px" }}>
-                <NavLink to="/" style={navLinkStyle}>
-                    Home
-                </NavLink>
+
                 <NavLink to="/trips" style={navLinkStyle}>
                     My Trips
                 </NavLink>
@@ -31,6 +29,9 @@ function NavBar() {
                 </NavLink>
                 <NavLink to="/profile" style={navLinkStyle}>
                     Profile
+                </NavLink>
+                <NavLink to="/" style={navLinkStyle}>
+                    About
                 </NavLink>
             </div>
         </nav>

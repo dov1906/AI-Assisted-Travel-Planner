@@ -72,6 +72,9 @@ const TripList = () => {
             <p>Explore all your trips and view their details on the map below.</p>
             {markers.length > 0 && <Map markers={markers} />}
 
+            <br></br>
+            <br></br>
+
             <button
                 onClick={() => navigate("/new-trip/add")}
                 style={{
