@@ -1,13 +1,6 @@
 
 # AI-Assisted Travel Planner
 
-## Learning Goals
-
-- Understand the implementation of a full-stack application combining React and Flask.
-- Integrate and utilize multiple APIs within a cohesive application.
-- Enhance user experience through dynamic CRUD operations and AI-driven features.
-
----
 
 ## Introduction
 
